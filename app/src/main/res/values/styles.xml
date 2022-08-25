@@ -1,0 +1,16 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.GameLib" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#C61919</item>
+        <item name="colorPrimaryVariant">#B5FF8D</item>
+        <item name="colorOnPrimary">#1F5700</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#FFA200</item>
+        <item name="colorSecondaryVariant">#EE00FF</item>
+        <item name="colorOnSecondary">#3E0075</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+</resources>
