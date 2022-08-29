@@ -7,15 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import com.sorgeligt.gamelib.databinding.FragmentMainBinding
-import com.sorgeligt.gamelib.ui.base.ListItem
+import com.sorgeligt.gamelib.ui.mainscreen.recycler.MainScreenAdapters.nestedRecyclerAdapter
+import com.sorgeligt.gamelib.ui.mainscreen.recycler.MainScreenDelegates
+import com.sorgeligt.gamelib.ui.mainscreen.recycler.items.*
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
-    private val adapter = ListDelegationAdapter<List<ListItem>>(
-        MainScreenDelegates.gamesHorizontalDelegate
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,13 +28,45 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding){
-            recyclerView.adapter = adapter
+        binding.recyclerView.adapter = nestedRecyclerAdapter().apply {
+            items = listOf(
+                NestedRecyclerItem.HorizontalRecyclerItem(
+                    "Top Games",
+                    (1..20).map { t ->
+                        GameItem.WideGameItem(t.toLong(), "Title Number $t")
+                    }
+                ),
+                NestedRecyclerItem.HorizontalRecyclerItem(
+                    "Stars Games",
+                    (20..50).map { t ->
+                        GameItem.ThinGameItem(t.toLong(), "Another Title $t")
+                    }
+                ),
+                NestedRecyclerItem.HorizontalRecyclerItem(
+                    "Cool Games",
+                    (70..120).map { t ->
+                        GameItem.WideGameItem(t.toLong(), "Title Number $t")
+                    }
+                ),
+                NestedRecyclerItem.HorizontalRecyclerItem(
+                    "Bad Games",
+                    (120..150).map { t ->
+                        GameItem.ThinGameItem(t.toLong(), "Another Title $t")
+                    }
+                ),
 
-            adapter.apply {
-                items = listOf(GamesHorizontalItem(emptyList()))
-                notifyDataSetChanged()
-            }
+                NestedRecyclerItem.HorizontalRecyclerItem(
+                    "FINALY",
+                    (120..150).map { t ->
+                        GameItem.ThinGameItem(t.toLong(), "Another Title $t")
+                    }
+                ),NestedRecyclerItem.HorizontalRecyclerItem(
+                    "FINALY2",
+                    (150..152).map { t ->
+                        GameItem.ThinGameItem(t.toLong(), "Another Title $t")
+                    }
+                ),
+            )
         }
     }
 }
