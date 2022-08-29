@@ -7,13 +7,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.sorgeligt.gamelib.databinding.FragmentMainBinding
-import com.sorgeligt.gamelib.ui.mainscreen.recycler.MainScreenAdapters.nestedRecyclerAdapter
+import com.sorgeligt.gamelib.ui.mainscreen.recycler.MainScreenDelegates
+import com.sorgeligt.gamelib.ui.mainscreen.recycler.NestedRecyclerAdapter
 import com.sorgeligt.gamelib.ui.viewmodel.mainscreen.MainScreenViewModel
 
 class MainScreenFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private val viewModel by viewModels<MainScreenViewModel>()
+    private val nestedRecyclerAdapter = NestedRecyclerAdapter(
+        MainScreenDelegates.horizontalRecyclerDelegate { }
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +33,6 @@ class MainScreenFragment : Fragment() {
         binding.recyclerView.adapter = nestedRecyclerAdapter
         viewModel.data.observe(viewLifecycleOwner) {
             nestedRecyclerAdapter.items = it
-            nestedRecyclerAdapter.notifyDataSetChanged()
         }
 
     }

@@ -7,14 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegate
 import com.sorgeligt.gamelib.R
-import com.sorgeligt.gamelib.ui.mainscreen.recycler.MainScreenAdapters.horizontalAdapter
 import com.sorgeligt.gamelib.model.games.GameItem
 import com.sorgeligt.gamelib.model.games.NestedRecyclerItem
 import kotlin.random.Random
 
 object MainScreenDelegates {
 
-    fun thinGameAdapterDelegate(thinGameClickListener: (GameItem.ThinGameItem) -> Unit) =
+    private fun thinGameAdapterDelegate(thinGameClickListener: (GameItem.ThinGameItem) -> Unit) =
         adapterDelegate<GameItem.ThinGameItem, GameItem>(R.layout.item_game_thin) {
             val title: TextView = findViewById(R.id.titleTextView)
             val imageView: ImageView = findViewById(R.id.imageView)
@@ -23,21 +22,19 @@ object MainScreenDelegates {
 
             bind {
                 title.text = item.title
-                imageView.setBackgroundColor(
-                    Color.rgb(
-                        Random.nextInt() % 255,
-                        Random.nextInt() % 255,
-                        Random.nextInt() % 255
-                    )
-                )
-
+                if(item.imageUrl != null) {
+                    Glide.with(imageView)
+                        .load(item.imageUrl)
+                        .centerCrop()
+                        .into(imageView)
+                }
             }
         }
 
-    fun progressThinGameAdapterDelegate() =
+    private fun progressThinGameAdapterDelegate() =
         adapterDelegate<GameItem.ProgressThinGameItem, GameItem>(R.layout.item_progress_game_thin) {}
 
-    fun wideGameAdapterDelegate(wideGameClickListener: (GameItem.WideGameItem) -> Unit) =
+    private fun wideGameAdapterDelegate(wideGameClickListener: (GameItem.WideGameItem) -> Unit) =
         adapterDelegate<GameItem.WideGameItem, GameItem>(R.layout.item_game_wide) {
             val title: TextView = findViewById(R.id.titleTextView)
             val imageView: ImageView = findViewById(R.id.imageView)
@@ -46,11 +43,16 @@ object MainScreenDelegates {
 
             bind {
                 title.text = item.title
-                imageView.setBackgroundColor(Random.nextInt() % 16581375)
+                if(item.imageUrl != null) {
+                    Glide.with(imageView)
+                        .load(item.imageUrl)
+                        .centerCrop()
+                        .into(imageView)
+                }
             }
         }
 
-    fun progressWideGameAdapterDelegate() =
+    private fun progressWideGameAdapterDelegate() =
         adapterDelegate<GameItem.ProgressWideGameItem, GameItem>(R.layout.item_progress_game_wide) {}
 
     fun horizontalRecyclerDelegate(
@@ -58,18 +60,25 @@ object MainScreenDelegates {
     ) = adapterDelegate<NestedRecyclerItem.HorizontalRecyclerItem, NestedRecyclerItem>(
         R.layout.item_games_horizontal
     ) {
-        val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
+        this.itemView.setOnClickListener {
+            recyclerClickListener(item)
+        }
+
+        val horizontalGamesCardAdapter = HorizontalGamesCardAdapter(
+            thinGameAdapterDelegate {},
+            progressThinGameAdapterDelegate(),
+            wideGameAdapterDelegate {},
+            progressWideGameAdapterDelegate()
+        )
+
+        findViewById<RecyclerView>(R.id.recycler_view).apply {
+            adapter = horizontalGamesCardAdapter
+        }
         val title: TextView = findViewById(R.id.titleGamesTextView)
-
-        this.itemView.setOnClickListener { recyclerClickListener(item) }
-
 
         bind {
             title.text = item.title
-            recyclerView.adapter = horizontalAdapter().apply {
-                items = item.games
-                notifyDataSetChanged() // TODO
-            }
+            horizontalGamesCardAdapter.items = item.games
         }
     }
 

@@ -1,20 +1,21 @@
 package com.sorgeligt.gamelib.ui.viewmodel.mainscreen
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.sorgeligt.gamelib.core.network.di.NetworkComponent
 import com.sorgeligt.gamelib.model.games.GameItem
 import com.sorgeligt.gamelib.model.games.NestedRecyclerItem
 import com.sorgeligt.gamelib.ui.viewmodel.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class MainScreenViewModel : BaseViewModel() {
 
     private val _data = MutableLiveData<List<NestedRecyclerItem>>()
     val data: LiveData<List<NestedRecyclerItem>> = _data
+    private val api = NetworkComponent.createApi()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -28,67 +29,61 @@ class MainScreenViewModel : BaseViewModel() {
     private suspend fun getLoaders(): List<NestedRecyclerItem> {
         return listOf(
             NestedRecyclerItem.HorizontalRecyclerItem(
-                "Top Games",
-                (1..8).map { t ->
-                    GameItem.ProgressWideGameItem(t.toLong(), "Title Number $t")
+                "Top upcoming",
+                (1..8).map {
+                    GameItem.ProgressWideGameItem()
                 }
             ),
             NestedRecyclerItem.HorizontalRecyclerItem(
-                "Stars Games",
-                (1..8).map { t ->
-                    GameItem.ProgressThinGameItem(t.toLong(), "Another Title $t")
+                "Latest releases",
+                (1..8).map {
+                    GameItem.ProgressThinGameItem()
 
                 }
             ),
             NestedRecyclerItem.HorizontalRecyclerItem(
-                "Top Games",
-                (1..8).map { t ->
-                    GameItem.ProgressWideGameItem(t.toLong(), "Title Number $t")
+                "The most rated in 2022 ",
+                (1..8).map {
+                    GameItem.ProgressWideGameItem()
                 }
             ))
     }
 
     private suspend fun getItems(): List<NestedRecyclerItem> {
-        delay(2000L)
+        val firstResult = api.games()
+        val secondResult = api.games(ordering = "rating")
+        Log.e("MEM", "$firstResult \n $secondResult")
         return listOf(
             NestedRecyclerItem.HorizontalRecyclerItem(
-                "Top Games",
-                (1..20).map { t ->
-                    GameItem.WideGameItem(t.toLong(), "Title Number $t")
-                }
+                title = "Top upcoming",
+                games = firstResult.results?.map {
+                    GameItem.WideGameItem(
+                        id = it.id,
+                        title = it.name,
+                        imageUrl = it.imageUrl
+                    )
+                } ?: listOf(GameItem.ProgressWideGameItem())
             ),
             NestedRecyclerItem.HorizontalRecyclerItem(
-                "Stars Games",
-                (20..50).map { t ->
-                    GameItem.ThinGameItem(t.toLong(), "Another Title $t")
-
-                }
+                title = "Latest releases",
+                games = secondResult.results?.map {
+                    GameItem.ThinGameItem(
+                        id = it.id,
+                        title = it.name,
+                        imageUrl = it.imageUrl
+                    )
+                }?: listOf(GameItem.ProgressWideGameItem())
             ),
             NestedRecyclerItem.HorizontalRecyclerItem(
-                "Cool Games",
-                (70..120).map { t ->
-                    GameItem.WideGameItem(t.toLong(), "Title Number $t")
-                }
-            ),
-            NestedRecyclerItem.HorizontalRecyclerItem(
-                "Bad Games",
-                (120..150).map { t ->
-                    GameItem.ThinGameItem(t.toLong(), "Another Title $t")
-                }
-            ),
-
-            NestedRecyclerItem.HorizontalRecyclerItem(
-                "FINALY",
-                (120..150).map { t ->
-                    GameItem.ThinGameItem(t.toLong(), "Another Title $t")
-                }
-            ),
-            NestedRecyclerItem.HorizontalRecyclerItem(
-                "FINALY2",
-                (150..152).map { t ->
-                    GameItem.ThinGameItem(t.toLong(), "Another Title $t")
-                }
-            ))
-
+                title = "The most rated in 2022 ",
+                games = api.games(dates = "2019-09-01,2019-09-30").results?.map {
+                    GameItem.ThinGameItem(
+                        id = it.id,
+                        title = it.name,
+                        imageUrl = it.imageUrl
+                    )
+                }?: listOf(GameItem.ProgressWideGameItem())
+            )
+        )
     }
 }
