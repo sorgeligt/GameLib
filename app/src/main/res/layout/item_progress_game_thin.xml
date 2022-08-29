@@ -9,26 +9,24 @@
     tools:background="@color/baseBack">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imagePlaceholderView"
         android:layout_width="@dimen/game_card_thin_width"
         android:layout_height="@dimen/game_card_thin_height"
+        android:background="@drawable/bg_item_placeholder"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="#A3A3A3"
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/titleTextView"
+        android:id="@+id/placeholderTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif-light"
-        android:paddingBottom="4dp"
-        android:textColor="@color/gameTitleText"
         android:textSize="16sp"
+        android:background="@drawable/bg_item_placeholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        tools:text="Game Title" />
+        app:layout_constraintTop_toBottomOf="@id/imagePlaceholderView"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

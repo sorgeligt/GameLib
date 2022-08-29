@@ -4,4 +4,5 @@
     <color name="baseBack">#FF000A12</color>
     <color name="categoryTitleText">@color/baseWhite</color>
     <color name="gameTitleText">@color/baseWhite</color>
+    <color name="placeholder">#9B9B9B</color>
 </resources>

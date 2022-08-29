@@ -1,5 +1,6 @@
 package com.sorgeligt.gamelib.ui.mainscreen.recycler
 
+import android.graphics.Color
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -7,8 +8,8 @@ import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegate
 import com.sorgeligt.gamelib.R
 import com.sorgeligt.gamelib.ui.mainscreen.recycler.MainScreenAdapters.horizontalAdapter
-import com.sorgeligt.gamelib.ui.mainscreen.recycler.items.GameItem
-import com.sorgeligt.gamelib.ui.mainscreen.recycler.items.NestedRecyclerItem
+import com.sorgeligt.gamelib.model.games.GameItem
+import com.sorgeligt.gamelib.model.games.NestedRecyclerItem
 import kotlin.random.Random
 
 object MainScreenDelegates {
@@ -22,13 +23,19 @@ object MainScreenDelegates {
 
             bind {
                 title.text = item.title
-                Glide.with(this.itemView)
-                    .load("https://source.unsplash.com/random/1200x1200?sig=${Random.nextInt()}")
-                    .placeholder(R.drawable.loading_plug)
-                    .centerCrop()
-                    .into(imageView)
+                imageView.setBackgroundColor(
+                    Color.rgb(
+                        Random.nextInt() % 255,
+                        Random.nextInt() % 255,
+                        Random.nextInt() % 255
+                    )
+                )
+
             }
         }
+
+    fun progressThinGameAdapterDelegate() =
+        adapterDelegate<GameItem.ProgressThinGameItem, GameItem>(R.layout.item_progress_game_thin) {}
 
     fun wideGameAdapterDelegate(wideGameClickListener: (GameItem.WideGameItem) -> Unit) =
         adapterDelegate<GameItem.WideGameItem, GameItem>(R.layout.item_game_wide) {
@@ -39,13 +46,12 @@ object MainScreenDelegates {
 
             bind {
                 title.text = item.title
-                Glide.with(this.itemView)
-                    .load("https://source.unsplash.com/random/1200x1200?sig=${Random.nextInt()}")
-                    .centerCrop()
-                    .placeholder(R.drawable.loading_plug)
-                    .into(imageView)
+                imageView.setBackgroundColor(Random.nextInt() % 16581375)
             }
         }
+
+    fun progressWideGameAdapterDelegate() =
+        adapterDelegate<GameItem.ProgressWideGameItem, GameItem>(R.layout.item_progress_game_wide) {}
 
     fun horizontalRecyclerDelegate(
         recyclerClickListener: (NestedRecyclerItem.HorizontalRecyclerItem) -> Unit

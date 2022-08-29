@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.sorgeligt.gamelib.R
 import com.sorgeligt.gamelib.databinding.ActivityMainBinding
-import com.sorgeligt.gamelib.ui.mainscreen.MainFragment
+import com.sorgeligt.gamelib.ui.mainscreen.MainScreenFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.container, MainFragment())
+                .add(R.id.container, MainScreenFragment())
                 .commit()
         }
     }
