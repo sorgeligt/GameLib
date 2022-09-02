@@ -1,15 +1,16 @@
 package com.sorgeligt.gamelib.ui.mainscreen.recycler
 
-import android.graphics.Color
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.hannesdorfmann.adapterdelegates4.dsl.adapterDelegate
 import com.sorgeligt.gamelib.R
 import com.sorgeligt.gamelib.model.games.GameItem
 import com.sorgeligt.gamelib.model.games.NestedRecyclerItem
-import kotlin.random.Random
 
 object MainScreenDelegates {
 
@@ -22,12 +23,14 @@ object MainScreenDelegates {
 
             bind {
                 title.text = item.title
-                if(item.imageUrl != null) {
-                    Glide.with(imageView)
-                        .load(item.imageUrl)
-                        .centerCrop()
-                        .into(imageView)
-                }
+                Glide.with(imageView)
+                    .load(item.imageUrl) // TODO OVERRIDE
+                    .transform(CenterCrop(), RoundedCorners(10)) // TODO RESOURCES
+                    .transition(withCrossFade(450))
+                    .into(imageView)
+            }
+            onViewRecycled {
+                Glide.with(itemView.rootView).clear(imageView)
             }
         }
 
@@ -43,12 +46,14 @@ object MainScreenDelegates {
 
             bind {
                 title.text = item.title
-                if(item.imageUrl != null) {
-                    Glide.with(imageView)
-                        .load(item.imageUrl)
-                        .centerCrop()
-                        .into(imageView)
-                }
+                Glide.with(itemView.rootView)
+                    .load(item.imageUrl) // TODO OVERRIDE
+                    .transform(CenterCrop(), RoundedCorners(10)) // TODO RESOURCES
+                    .transition(withCrossFade(450))
+                    .into(imageView)
+            }
+            onViewRecycled {
+                Glide.with(itemView.rootView).clear(imageView)
             }
         }
 
@@ -83,3 +88,4 @@ object MainScreenDelegates {
     }
 
 }
+

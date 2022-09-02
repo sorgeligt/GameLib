@@ -2,6 +2,10 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
+apply plugin: 'kotlin-kapt'
+kapt {
+    generateStubs = true
+}
 
 android {
     compileSdk 32
@@ -28,22 +32,27 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs = ['-Xjvm-default=compatibility']
     }
 
     buildFeatures {
         viewBinding true
-        dataBinding true
     }
 }
 
 dependencies {
 
+
     implementation project(":core-network") // TODO REMOVE
+
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.43.2'
+    kapt 'com.google.dagger:dagger-compiler:2.43.2'
 
     // Glide
     def glideVersion = '4.13.2'
     implementation 'com.github.bumptech.glide:glide:' + glideVersion
-    annotationProcessor 'com.github.bumptech.glide:compiler:' + glideVersion
+    kapt 'com.github.bumptech.glide:compiler:' + glideVersion
 
     // Adapter
     implementation 'com.hannesdorfmann:adapterdelegates4-kotlin-dsl:4.3.2'

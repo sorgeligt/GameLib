@@ -2,6 +2,8 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
 }
+apply plugin: 'kotlin-kapt'
+
 
 android {
     compileSdk 32
@@ -30,6 +32,12 @@ android {
 }
 
 dependencies {
+
+
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.43.2'
+    kapt 'com.google.dagger:dagger-compiler:2.43.2'
+
     // Network
     def retrofitVersion = '2.9.0'
     implementation 'com.squareup.retrofit2:retrofit:' + retrofitVersion
